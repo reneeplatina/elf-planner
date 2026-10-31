@@ -2,6 +2,7 @@ import React from 'react'
 import { createRoot } from 'react-dom/client'
 import { HashRouter } from 'react-router-dom'
 import App from './App.jsx'
-import AuthGate from './Auth.jsx'
+import { migrateLocal } from './storage'
 import './styles.css'
-createRoot(document.getElementById('root')).render(<AuthGate><HashRouter><App /></HashRouter></AuthGate>)
+migrateLocal().catch(() => {}).finally(() =>
+  createRoot(document.getElementById('root')).render(<HashRouter><App /></HashRouter>))
