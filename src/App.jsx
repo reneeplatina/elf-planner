@@ -1,7 +1,7 @@
 import { useEffect, useState, useMemo } from 'react'
 import { Routes, Route, NavLink, Link, useParams } from 'react-router-dom'
 import { load, save, backend } from './storage'
-import { defaultDays, SUPPLIES, STORES, KIDS } from './data'
+import { defaultDays, SUPPLIES, STORES } from './data'
 
 function usePersist(key, init) {
   const [v, setV] = useState(init); const [ready, setReady] = useState(false)
@@ -46,7 +46,6 @@ function Calendar({ days }) {
   const cells = [...Array(2).fill(null), ...Array.from({ length: 31 }, (_, i) => i + 1)]
   return <section>
     <h1 className="title">December 2026 <span>✨ Elf Magic ✨</span></h1>
-    <div className="kids">{Object.entries(KIDS).map(([k, v]) => <div key={k} className="kid"><b>{k}</b> {v}</div>)}</div>
     <div className="cal">
       {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(d => <div key={d} className="dow">{d}</div>)}
       {cells.map((n, i) => n == null ? <div key={i} /> : n <= 24 ?
