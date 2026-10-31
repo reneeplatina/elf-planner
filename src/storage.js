@@ -1,6 +1,6 @@
 import { createClient } from '@supabase/supabase-js'
 const url = import.meta.env.VITE_SUPABASE_URL, key = import.meta.env.VITE_SUPABASE_ANON_KEY
-export const sb = url && key ? createClient(url, key) : null
+export const sb = url && key ? createClient(url, key, { auth: { flowType: 'pkce' } }) : null
 export const backend = sb ? 'supabase' : 'localStorage'
 const P = 'elfplanner:'
 const local = k => { try { const v = localStorage.getItem(P + k); return v ? JSON.parse(v) : undefined } catch { return undefined } }
