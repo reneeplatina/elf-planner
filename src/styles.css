@@ -1,0 +1,57 @@
+@import url('https://fonts.googleapis.com/css2?family=Mountains+of+Christmas:wght@700&family=Nunito:wght@400;700&display=swap');
+:root{--red:#c8102e;--green:#0b6e4f;--gold:#f4c542;--cream:#fff8ee}
+*{box-sizing:border-box}
+body{margin:0;font-family:Nunito,sans-serif;color:#2b1d1d;background:radial-gradient(circle at 20% 0,#1d5c46,#0a2e24 60%);background-attachment:fixed;min-height:100vh}
+body:before{content:"❄ ✦ ❄ ✧ ❄ ✦";position:fixed;inset:0;font-size:40px;color:#ffffff10;letter-spacing:60px;line-height:120px;word-break:break-all;pointer-events:none;z-index:-1}
+.top{position:sticky;top:0;z-index:5;background:linear-gradient(90deg,var(--red),#8e0c22);color:#fff;padding:10px 12px;box-shadow:0 3px 12px #0006;border-bottom:4px dashed var(--gold);display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.logo{font-family:'Mountains of Christmas',cursive;font-size:26px;color:#fff;text-decoration:none;flex:1}
+nav{display:flex;gap:6px;overflow-x:auto;width:100%}
+nav a{color:#fff;text-decoration:none;padding:6px 12px;border-radius:20px;background:#ffffff22;white-space:nowrap;font-weight:700;font-size:14px}
+nav a.active{background:var(--gold);color:#5a0010}
+.secretbtn{background:#fff;color:#8e0c22;border:0;border-radius:20px;padding:6px 10px;font-weight:700}
+main{max-width:900px;margin:auto;padding:14px}
+.secret .blurzone{filter:blur(9px);transition:.2s}.secret .blurzone:hover{filter:blur(9px)}
+.title{font-family:'Mountains of Christmas',cursive;color:var(--gold);text-align:center;font-size:40px;margin:8px 0;text-shadow:0 3px 0 #0005}
+.title span{display:block;font-size:22px;color:#fff}
+.kids{display:grid;gap:8px;grid-template-columns:1fr 1fr;margin-bottom:12px}
+.kid{background:#ffffff18;color:#fff;border-radius:12px;padding:8px;font-size:13px}.kid b{color:var(--gold);display:block}
+.cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px;background:var(--cream);padding:8px;border-radius:18px;border:4px solid var(--gold);box-shadow:0 10px 30px #0008}
+.dow{text-align:center;font-weight:700;color:var(--red);font-size:12px}
+.cell{min-height:78px;border-radius:10px;padding:4px;background:#fff;border:2px dashed #e6c9a8;text-decoration:none;color:#333;display:flex;flex-direction:column;font-size:11px;transition:.15s}
+.cell:hover{transform:scale(1.05);border-color:var(--red)}
+.cell.planned{background:linear-gradient(135deg,var(--red),#e8475f);color:#fff;border:2px solid var(--gold)}
+.cell.off{opacity:.45;background:#eee}
+.num{font-family:'Mountains of Christmas';font-size:22px;line-height:1}
+.card{background:var(--cream);border-radius:16px;padding:14px;margin:12px 0;box-shadow:0 6px 18px #0006;border-top:6px solid var(--red)}
+.card:nth-child(odd){border-top-color:var(--green)}
+.card.night{background:#1c2340;color:#e9ecff;border-top-color:var(--gold)}
+h2{margin:0 0 8px;font-size:19px;color:var(--green)}.night h2{color:var(--gold)}h2 small{color:#888;font-size:13px}
+input,select,textarea{font:inherit;padding:8px;border:1px solid #d9c3a5;border-radius:8px;width:100%;margin:3px 0;background:#fff}
+input[type=checkbox]{width:20px;height:20px;accent-color:var(--red)}
+input.sm{width:70px}.big{font-size:20px;font-weight:700}
+button{font:inherit;background:var(--green);color:#fff;border:0;border-radius:8px;padding:8px 14px;cursor:pointer;font-weight:700}
+button.x{background:none;color:#c66;padding:4px}
+.row{display:flex;gap:6px;align-items:center;margin-top:6px}.row input{flex:1}
+.total{margin-left:auto;color:var(--red);font-size:18px}
+.tablewrap{overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:14px}td,th{padding:3px;text-align:left}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.chip{background:#fff;color:#555;border:1px solid #ddd;font-size:13px;padding:5px 10px;border-radius:20px}
+.chip.on{background:var(--green);color:#fff}.chip.miss{background:var(--red);color:#fff}
+.warn{background:#ffe3e3;color:#8e0c22;padding:8px;border-radius:8px;font-weight:700}
+.hint{font-size:12px;color:#7a6a5a}main>section>.hint{color:#cfe}
+.tasks{padding-left:22px}.tasks li{display:flex;justify-content:space-between;align-items:center;margin:4px 0}ol.tasks li{display:list-item}
+.tasks label{display:flex;gap:8px;align-items:center}.done{text-decoration:line-through;opacity:.5}
+.daynav{display:flex;align-items:center;justify-content:space-between}.daynav h1{font-family:'Mountains of Christmas';color:var(--gold);font-size:44px;margin:0}
+.daynav a{font-size:40px;color:#fff;text-decoration:none;padding:0 14px}
+.thumbs{display:flex;flex-wrap:wrap;gap:8px}.thumb{background:#fff;padding:6px;border-radius:8px;font-size:12px;max-width:200px}.thumb img{width:100%}
+.mem{width:120px;border-radius:8px;border:3px solid #fff;transform:rotate(-2deg)}
+.field{display:block;margin:6px 0}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:6px}.check{display:flex;gap:6px;align-items:center;font-size:14px}
+.grand{text-align:center;font-size:17px}
+.badge{padding:2px 8px;border-radius:10px;color:#fff;font-size:12px;background:#666}.badge.TikTok{background:#000}.badge.Pinterest{background:#e60023}.badge.Facebook{background:#1877f2}
+.idea a{word-break:break-all}
+.sheet{background:#fff;max-width:8.5in;margin:auto;padding:40px;border:10px solid var(--red);outline:4px dashed var(--gold);outline-offset:-22px;border-radius:12px;font-size:20px}
+.sheet h1{font-family:'Mountains of Christmas';color:var(--red);text-align:center;font-size:46px;margin-top:0}
+.rules li{margin:12px 0}.sig{font-family:'Mountains of Christmas';font-size:32px;color:var(--green);text-align:right}.kit{list-style:none;font-size:22px}
+.print{background:var(--red)}
+footer{text-align:center;color:#cfe;font-size:12px;padding:20px}
+@media print{.no-print,footer{display:none!important}body{background:#fff}body:before{display:none}main{padding:0}.sheet{border-width:8px}.secret .blurzone{filter:none}}
