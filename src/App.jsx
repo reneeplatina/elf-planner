@@ -215,7 +215,10 @@ function Dashboard({ days, ideas }) {
   const items = Object.entries(days).flatMap(([n, d]) => d.shopping.map(x => ({ ...x, n })))
   const bought = items.filter(x => x.own || +x.actual > 0), toBuy = items.filter(x => !(x.own || +x.actual > 0))
   return <section className="dash">
-    <h1 className="title">North Pole HQ <span>{dec ? `December ${now.getDate()}` : daysTo > 0 ? `${daysTo} days until Ellie & Ozzy arrive` : 'Arrival night!'}</span></h1>
+    <div className="hero"><div className="hero-img"><picture><source srcSet={import.meta.env.BASE_URL + 'hero.webp'} type="image/webp" />
+      <img src={import.meta.env.BASE_URL + 'hero.jpg'} alt="Ellie, Ozzy and friends in front of a glowing Christmas tree" width="1000" height="1000" fetchpriority="high" /></picture></div>
+      <div className="hero-txt"><h1>Ellie &amp; Ozzy's North Pole HQ</h1>
+        <p className="count">{dec ? `December ${now.getDate()}` : daysTo > 0 ? <><b>{daysTo}</b> days until Ellie &amp; Ozzy arrive</> : 'Arrival night!'}</p></div></div>
     <div className="dgrid">
       <Link to={`/day/${Math.min(tn, 24)}`} className="tile glow"><small>Tonight's setup · Dec {tn} morning</small><b>{scene(tn)}</b></Link>
       <Link to={`/day/${Math.min(tm, 24)}`} className="tile"><small>Tomorrow night · Dec {tm} morning</small><b>{scene(tm)}</b></Link>
