@@ -118,3 +118,34 @@ body.editing input,body.editing select,body.editing textarea,body.editing button
 .shoplist label{display:flex;gap:10px;align-items:center;flex:1}.shoplist img{width:44px;height:44px;object-fit:cover;border-radius:8px}
 .shoplist small{display:block;color:#7a6a5a}.shoplist li.got span{text-decoration:line-through;opacity:.55}
 .shoplist input[type=checkbox]{width:26px;height:26px;flex:none}
+/* Mobile sweep */
+html,body{overflow-x:hidden}
+.cell{overflow:hidden;min-width:0}
+.cell .t{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere;hyphens:auto;line-height:1.2}
+.wk{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+main{overflow-wrap:anywhere}.title{scroll-margin-top:120px}
+nav{scrollbar-width:none;-webkit-overflow-scrolling:touch;scroll-snap-type:x proximity;padding-bottom:2px}nav::-webkit-scrollbar{display:none}nav a{scroll-snap-align:start;flex:none}
+.total{white-space:nowrap}.row{flex-wrap:wrap}.row input{min-width:0}
+.tasks li{gap:6px}.tasks label{min-width:0;overflow-wrap:anywhere}
+.shoplist label{min-width:0}.shoplist span{overflow-wrap:anywhere}
+@media(max-width:520px){
+ .top{position:static;padding:22px 10px 8px!important}
+ .logo{font-size:20px}.editbtn{padding:8px 12px;font-size:14px}
+ main{padding:10px}.title{font-size:30px}.title span{font-size:17px}
+ .cal{gap:3px;padding:5px;border-width:3px;border-radius:12px}
+ .dow{font-size:10px}
+ .cell{min-height:56px;padding:3px 2px;font-size:9px;border-width:1px;border-radius:7px;align-items:center;text-align:center}
+ .cell:hover{transform:none}
+ .num{font-size:18px}
+ .cell .t{-webkit-line-clamp:2;font-size:8.5px;word-break:break-word}
+ .cell .t.none{display:none}
+ .cimg{height:16px}
+ .wk{font-size:0;margin-top:auto}.wkt{display:none}.wk:after{content:"";display:block;width:7px;height:7px;border-radius:50%;background:#2a6db0;margin:2px auto 0}
+ .cell.planned .wk:after{background:var(--gold)}
+ .daynav h1{font-size:34px}.daynav a{font-size:32px;padding:0 8px}
+ .grid2{grid-template-columns:1fr}
+ .sheet{padding:18px;font-size:16px;border-width:6px}.sheet h1{font-size:32px}
+ .cardsheet{grid-template-columns:1fr}
+ .editbar{font-size:13px;padding:8px 10px}
+ table{font-size:12px}
+}

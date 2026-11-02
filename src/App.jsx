@@ -73,8 +73,8 @@ function Calendar({ days, ideas }) {
       {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(d => <div key={d} className="dow">{d}</div>)}
       {cells.map((n, i) => n == null ? <div key={i} /> : n <= 24 ?
         <Link key={i} to={`/day/${n}`} className={'cell ' + (titleFor(n, days, ideas) ? 'planned ' : '') + (i % 7 === 0 || i % 7 === 6 ? 'wknd' : '')}>
-          <span className="num">{n}</span>{days[n]?.image && <img className="cimg" src={days[n].image} alt="" />}<span className="t">{titleFor(n, days, ideas) || 'Unscheduled'}</span>{(i % 7 === 0 || i % 7 === 6) && <span className="wk">big setup</span>}
-        </Link> : n === 25 ? <div key={i} className="cell xmas"><span className="num">25</span><span className="t">Ellie &amp; Ozzy return with Santa</span></div> : <div key={i} className="cell off"><span className="num">{n}</span></div>)}
+          <span className="num">{n}</span>{days[n]?.image && <img className="cimg" src={days[n].image} alt="" />}<span className={'t' + (titleFor(n, days, ideas) ? '' : ' none')} title={titleFor(n, days, ideas) || 'Unscheduled'}>{titleFor(n, days, ideas) || 'Unscheduled'}</span>{(i % 7 === 0 || i % 7 === 6) && <span className="wk"><span className="wkt">big setup</span></span>}
+        </Link> : n === 25 ? <div key={i} className="cell xmas"><span className="num">25</span><span className="t" title="Ellie &amp; Ozzy return with Santa">Ellie &amp; Ozzy return with Santa</span></div> : <div key={i} className="cell off"><span className="num">{n}</span></div>)}
     </div>
   </section>
 }
