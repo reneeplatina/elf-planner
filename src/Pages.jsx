@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, useParams, useNavigate } from 'react-router-dom'
 import { T, useM, Del, shrink } from './Manage'
 import { Calendar, titleFor, uid, money } from './App'
+import Planner from './Planner'
 import { aiOn, aiTitle, aiSupplies } from './ai'
 const B = import.meta.env.BASE_URL
 
@@ -34,13 +35,7 @@ export function Dashboard(P) {
       <div className="hero-txt"><T as="h1" k="home.title" d="Ellie & Ozzy's North Pole HQ" />
         <p className="count">{dec ? `December ${now.getDate()}` : daysTo > 0 ? <><b>{daysTo}</b> days until Ellie &amp; Ozzy arrive</> : 'Arrival night!'}</p></div>
     </div>
-    <div className="dgrid">
-      <Link to={`/day/${Math.min(tn, 24)}`} className="tile glow"><small>Tonight · Dec {tn} morning</small><b>{scene(tn)}</b></Link>
-      <Link to={`/day/${Math.min(tm, 24)}`} className="tile"><small>Tomorrow · Dec {tm} morning</small><b>{scene(tm)}</b></Link>
-    </div>
-    <div className="card progress"><h2>{approved.length}/24 scenes chosen</h2><div className="bar"><i style={{ width: Math.min(100, approved.length / 24 * 100) + '%' }} /></div>
-      {upcoming.length > 0 && <ul className="up">{upcoming.map(x => <li key={x.id}><Link to={`/idea/${x.id}`}>Dec {x.date} · {x.title}</Link></li>)}</ul>}</div>
-    <Calendar {...P} />
+    <Planner {...P} />
     <figure className="framed"><picture><source srcSet={B + 'hero.webp'} type="image/webp" /><img src={B + 'hero.jpg'} alt="Ellie, Ozzy and friends by the Christmas tree" loading="lazy" width="1000" height="1000" /></picture>
       <figcaption><T k="home.photo" d="The whole crew, Christmas 2026" /></figcaption></figure>
   </section>

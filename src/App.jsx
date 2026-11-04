@@ -7,10 +7,10 @@ import { Dashboard, Ideas, IdeaPage, Library, TryList } from './Pages'
 import { Lights, Snow } from './Fx'
 import { Ctx, useM, T, ImageField, Del } from './Manage'
 
-function usePersist(key, init, fix) {
+export function usePersist(key, init, fix) {
   const [v, setV] = useState(init); const [ready, setReady] = useState(false)
   useEffect(() => { load(key, init).then(async x => { setV(fix ? await fix(x) : x); setReady(true) }) }, [key])
-  useEffect(() => { if (ready) save(key, v) }, [v, ready])
+  useEffect(() => { if (!ready) return; const t = setTimeout(() => save(key, v), 400); return () => clearTimeout(t) }, [v, ready])
   return [v, setV]
 }
 export const uid = () => Math.random().toString(36).slice(2)
@@ -43,7 +43,7 @@ export default function App() {
       {menu && <div className="menu">
         <button className={'editbtn' + (edit ? ' on' : '')} onClick={() => { setEdit(!edit); setMenu(false) }}>{edit ? '✅ Done managing' : '✏️ Manage'}</button>
       </div>}
-      <nav>{[['/', 'Home'], ['/ideas', 'Ideas'], ['/try', 'To Try'], ['/library', 'Library'], ['/print', 'Printables']].map(([to, l]) =>
+      <nav>{[['/', 'Planner'], ['/ideas', 'Ideas'], ['/try', 'To Try'], ['/library', 'Library'], ['/print', 'Printables']].map(([to, l]) =>
         <NavLink key={to} to={to} end={to === '/'}>{l}</NavLink>)}</nav>
     </header>
     <main className="blurzone"><div className="page" key={loc.pathname}>
