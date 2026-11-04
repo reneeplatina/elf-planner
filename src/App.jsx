@@ -1,8 +1,9 @@
 import { useEffect, useState, useMemo } from 'react'
 import { Routes, Route, NavLink, Link, useParams, useLocation } from 'react-router-dom'
-import { load, save, backend } from './storage'
+import { load, save, backend, onSave, retrySaves } from './storage'
 import { defaultDays, SUPPLIES, STORES } from './data'
 import { SEED_IDEAS, mergeSeeds } from './ideas'
+import { Supplies, MyList } from './Sheets'
 import { Dashboard, Ideas, IdeaPage, Library, TryList } from './Pages'
 import { Lights, Snow } from './Fx'
 import { Ctx, useM, T, ImageField, Del } from './Manage'
@@ -12,6 +13,13 @@ export function usePersist(key, init, fix) {
   useEffect(() => { load(key, init).then(async x => { setV(fix ? await fix(x) : x); setReady(true) }) }, [key])
   useEffect(() => { if (!ready) return; const t = setTimeout(() => save(key, v), 400); return () => clearTimeout(t) }, [v, ready])
   return [v, setV]
+}
+function SaveBadge() {
+  const [st, setSt] = useState('idle'), [show, setShow] = useState(false)
+  useEffect(() => onSave(s => { setSt(s); setShow(true) }), [])
+  useEffect(() => { if (st !== 'saved') return; const t = setTimeout(() => setShow(false), 1800); return () => clearTimeout(t) }, [st])
+  if (!show || st === 'idle') return null
+  return <div className={'savebadge s-' + st} role="status" aria-live="polite">{st === 'saving' ? 'Saving…' : st === 'saved' ? '✓ Saved' : <>⚠️ Couldn't save — check your connection <button onClick={retrySaves}>Retry</button></>}</div>
 }
 export const uid = () => Math.random().toString(36).slice(2)
 export const money = n => '$' + (Number(n) || 0).toFixed(2)
@@ -35,7 +43,7 @@ export default function App() {
   const P = { days, setDays, closet, ideas: ideas.filter(x => !x.deleted), allIdeas: ideas, setIdeas, supplies: supplies || [], setSupplies, stores, library, setLibrary, tryList, setTryList }
   const M = { edit, texts, setText: (k, v) => setTexts(t => ({ ...t, [k]: v })) }
   return <Ctx.Provider value={M}><div>
-    <Snow />
+    <Snow /><SaveBadge />
     <header className="top no-print">
       <Lights />
       <Link to="/" className="logo"><T k="site.name" d="Ellie & Ozzy's North Pole HQ" /></Link>
@@ -43,14 +51,16 @@ export default function App() {
       {menu && <div className="menu">
         <button className={'editbtn' + (edit ? ' on' : '')} onClick={() => { setEdit(!edit); setMenu(false) }}>{edit ? '✅ Done managing' : '✏️ Manage'}</button>
       </div>}
-      <nav>{[['/', 'Planner'], ['/ideas', 'Ideas'], ['/try', 'To Try'], ['/library', 'Library'], ['/print', 'Printables']].map(([to, l]) =>
-        <NavLink key={to} to={to} end={to === '/'}>{l}</NavLink>)}</nav>
+      <nav>{[['/', 'Planner'], ['/ideas', 'Ideas'], ['/supplies', 'Supplies'], ['/try', 'To Try'], ['/library', 'Library'], ['/print', 'Printables']].map(([to, l]) =>
+        <NavLink key={to} to={to} end={to === '/'} className={({ isActive }) => isActive || (to === '/ideas' && loc.pathname === '/mylist') ? 'active' : ''}>{l}</NavLink>)}</nav>
     </header>
     <main className="blurzone"><div className="page" key={loc.pathname}>
       <Routes location={loc}>
         <Route path="/" element={<Dashboard {...P} />} />
         <Route path="/ideas" element={<Ideas {...P} />} />
         <Route path="/idea/:id" element={<IdeaPage {...P} />} />
+        <Route path="/mylist" element={<MyList {...P} />} />
+        <Route path="/supplies" element={<Supplies />} />
         <Route path="/try" element={<TryList {...P} />} />
         <Route path="/library" element={<Library {...P} />} />
         <Route path="/day/:n" element={<Day {...P} />} />

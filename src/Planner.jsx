@@ -2,6 +2,7 @@ import { useState, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { usePersist, uid, money, titleFor } from './App'
 import { shrink } from './Manage'
+import { useGeneral } from './Sheets'
 const B = import.meta.env.BASE_URL
 const NIGHTS = Array.from({ length: 25 }, (_, i) => String(i + 1))
 const blankNight = () => ({ title: '', label: '', image: '', rows: [] })
@@ -18,18 +19,20 @@ const nightTotal = rows => rows.reduce((t, r) => t + priceOf(r.price), 0)
 export default function Planner({ days, ideas }) {
   const [plan, setPlan] = usePersist('planner', fixPlan(null), fixPlan)
   const [view, setView] = useState('nights')
+  const [gen, setGen] = useGeneral()
+  const gTot = gen.reduce((t, r) => t + priceOf(r.price), 0), gLeft = gen.filter(r => !r.bought).reduce((t, r) => t + priceOf(r.price), 0)
   const up = (n, patch) => setPlan(p => ({ ...p, [n]: { ...p[n], ...patch } }))
-  const grand = NIGHTS.reduce((t, n) => t + nightTotal(plan[n].rows), 0)
-  const left = NIGHTS.reduce((t, n) => t + nightTotal(plan[n].rows.filter(r => !r.bought)), 0)
+  const grand = gTot + NIGHTS.reduce((t, n) => t + nightTotal(plan[n].rows), 0)
+  const left = gLeft + NIGHTS.reduce((t, n) => t + nightTotal(plan[n].rows.filter(r => !r.bought)), 0)
   return <section className="planner">
     <div className="ptop">
       <div className="seg"><button className={view === 'nights' ? 'on' : ''} onClick={() => setView('nights')}>🎄 Nights</button><button className={view === 'buy' ? 'on' : ''} onClick={() => setView('buy')}>🛒 To buy</button></div>
       <div className="grand"><span>Grand total <b>{money(grand)}</b></span><span>Still to buy <b>{money(left)}</b></span></div>
     </div>
     {view === 'nights' ? <>
-      <div className="jump">{NIGHTS.map(n => <a key={n} href={`#n${n}`} onClick={e => { e.preventDefault(); document.getElementById('n' + n)?.scrollIntoView({ behavior: 'smooth' }) }} className={plan[n].rows.length || titleFor(+n, days, ideas) || plan[n].title ? 'has' : ''}>{n}</a>)}</div>
+      <div className="jump">{NIGHTS.map(n => <a key={n} href={`#n${n}`} onClick={e => { e.preventDefault(); document.getElementById('n' + n)?.scrollIntoView({ behavior: 'smooth' }) }} className={plan[n].rows.length || (plan[n].titleSet ? plan[n].title : titleFor(+n, days, ideas) || plan[n].title) ? 'has' : ''}>{n}</a>)}</div>
       {NIGHTS.map(n => <Night key={n} n={n} night={plan[n]} up={p => up(n, p)} days={days} ideas={ideas} />)}
-    </> : <ToBuy plan={plan} setPlan={setPlan} />}
+    </> : <ToBuy plan={plan} setPlan={setPlan} gen={gen} setGen={setGen} />}
   </section>
 }
 
@@ -48,11 +51,11 @@ function Night({ n, night, up, days, ideas }) {
   }
   const total = nightTotal(rows)
   return <article className="night-block" id={'n' + n}>
-    <div className="band"><input className="dlabel" value={night.label || dateLabel(n)} onChange={e => up({ label: e.target.value === dateLabel(n) ? '' : e.target.value })} aria-label="Date" />
+    <div className="band"><input className="dlabel" value={night.labelSet ? night.label : night.label || dateLabel(n)} placeholder="Date" onChange={e => up({ label: e.target.value, labelSet: e.target.value !== dateLabel(n) })} aria-label="Date" />
       <span className="ntotal">{money(total)}</span></div>
     <div className="nbody">
       <div className="nleft">
-        <input className="ntitle" value={night.title || fallbackTitle || ''} placeholder="Scene title…" onChange={e => up({ title: e.target.value })} aria-label="Scene title" />
+        <input className="ntitle" value={night.titleSet ? night.title : night.title || fallbackTitle || ''} placeholder="Scene title…" onChange={e => up({ title: e.target.value, titleSet: true })} aria-label="Scene title" />
         <ImgSpot value={img} own={!!night.image} onChange={v => up({ image: v })} />
         {idea && <Link className="ilink" to={`/idea/${idea.id}`}>Open idea →</Link>}
       </div>
@@ -81,13 +84,14 @@ function ImgSpot({ value, own, onChange }) {
   </div>
 }
 
-function ToBuy({ plan, setPlan }) {
-  const items = NIGHTS.flatMap(n => plan[n].rows.filter(r => !r.bought && r.supply.trim() && !isFree(r.price)).map(r => ({ ...r, n, store: storeOf(r.price) || 'No store yet' })))
+function ToBuy({ plan, setPlan, gen, setGen }) {
+  const items = [...NIGHTS.flatMap(n => plan[n].rows.filter(r => !r.bought && r.supply.trim() && !isFree(r.price)).map(r => ({ ...r, n, store: storeOf(r.price) || 'No store yet' }))),
+    ...gen.filter(r => !r.bought && (r.item || '').trim()).map(r => ({ ...r, n: 'G', supply: r.item, price: r.price, store: (/^https?:/.test(r.store) ? '' : storeOf(r.store)) || storeOf(r.price) || 'No store yet' }))]
   const stores = [...new Set(items.map(x => x.store))].sort((a, b) => (a === 'No store yet') - (b === 'No store yet') || a.localeCompare(b))
-  const tick = (n, id) => setPlan(p => ({ ...p, [n]: { ...p[n], rows: p[n].rows.map(r => r.id === id ? { ...r, bought: true } : r) } }))
+  const tick = (n, id) => n === 'G' ? setGen(a => a.map(r => r.id === id ? { ...r, bought: true } : r)) : setPlan(p => ({ ...p, [n]: { ...p[n], rows: p[n].rows.map(r => r.id === id ? { ...r, bought: true } : r) } }))
   if (!items.length) return <p className="hint lt center">Nothing left to buy. 🎉</p>
   return <div className="tobuy">{stores.map(s => { const it = items.filter(x => x.store === s); return <div key={s} className="storeblock">
     <div className="band"><b>{s}</b><span className="ntotal">{money(nightTotal(it))}</span></div>
-    <ul>{it.map(x => <li key={x.id}><label><input type="checkbox" onChange={() => tick(x.n, x.id)} /><span>{x.supply}<small>Dec {x.n}{x.price ? ` · ${x.price}` : ''}{x.notes ? ` · ${x.notes}` : ''}</small></span></label></li>)}</ul></div> })}
+    <ul>{it.map(x => <li key={x.id}><label><input type="checkbox" onChange={() => tick(x.n, x.id)} /><span>{x.supply}<small>{x.n === 'G' ? 'General' : `Dec ${x.n}`}{x.price ? ` · ${x.price}` : ''}{x.notes ? ` · ${x.notes}` : ''}</small></span></label></li>)}</ul></div> })}
     <p className="hint lt center">Store comes from the Price / Store column (e.g. "1.5 Dollar Tree"). Tick to mark bought.</p></div>
 }

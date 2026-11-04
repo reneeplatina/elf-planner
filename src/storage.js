@@ -12,10 +12,21 @@ export async function load(k, fallback) {
   }
   return local(k) ?? fallback
 }
+// Save status: 'idle' | 'saving' | 'saved' | 'error'. Failed saves are kept for retry.
+let status = 'idle', pending = 0; const failed = new Map(), subs = new Set()
+const emit = s => { status = s; subs.forEach(f => f(s)) }
+export const onSave = f => { subs.add(f); f(status); return () => subs.delete(f) }
 export async function save(k, v) {
   localStorage.setItem(P + k, JSON.stringify(v))
-  if (sb) await sb.from('elf_store').upsert({ key: k, value: v, updated_at: new Date().toISOString() })
+  if (!sb) return
+  pending++; emit('saving')
+  let err
+  try { const r = await sb.from('elf_store').upsert({ key: k, value: v, updated_at: new Date().toISOString() }); err = r.error } catch (e) { err = e }
+  pending--
+  if (err) failed.set(k, v); else failed.delete(k)
+  if (!pending) emit(failed.size ? 'error' : 'saved')
 }
+export const retrySaves = () => [...failed].forEach(([k, v]) => save(k, v))
 // On first load, push any localStorage keys that don't exist in the cloud yet.
 export async function migrateLocal() {
   if (!sb || localStorage.getItem(P + '__migrated')) return

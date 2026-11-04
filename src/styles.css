@@ -227,3 +227,19 @@ nav{justify-content:center;gap:4px}nav a{padding:7px 14px;background:none}nav a:
  .sheet-t td input:not([type=checkbox]){font-size:16px;padding:8px 6px}.sheet-t td:nth-child(2) input{font-weight:700}
  .grand{width:100%;justify-content:space-between}.dlabel{font-size:22px}
 }
+/* v5 sheets */
+.sheetcard{background:var(--cream);border-radius:16px;overflow:hidden;margin:10px 0 18px;box-shadow:0 8px 24px #0007}.sheetcard .band b{font-size:20px}.sbody{padding:14px}
+.gsheet th:nth-child(n){width:auto}
+.center-seg{display:flex;width:max-content;margin:0 auto 6px}.seg a{border-radius:999px;padding:8px 16px;color:#fff;text-decoration:none;font-weight:700}.seg a.on{background:var(--gold);color:#5a0010}
+.gsheet tr.got input[data-c=item]{text-decoration:line-through;opacity:.5}
+@media(max-width:700px){
+ .sbody{padding:10px}
+ .gsheet tr{grid-template-columns:34px 1fr 34px;grid-template-areas:none}
+ .gsheet td{grid-area:auto!important}.gsheet td.ck{grid-column:1;grid-row:1}.gsheet td.c0{grid-column:2;grid-row:1}.gsheet td.dl{grid-column:3;grid-row:1}
+ .gsheet:not(.hasck) td.c0{grid-column:1/3}
+ .gsheet td.cx{grid-column:1/-1;border-top:1px solid #f1e6d6!important;padding-left:10px}
+ .gsheet td.c0 input{font-weight:700}.gsheet td.c0:before{display:none}
+ .gsheet td[data-h].cx:before{content:attr(data-h);font-size:10px;text-transform:uppercase;color:#b08a60;font-weight:800;width:62px;flex:none}
+}
+.savebadge{position:fixed;right:14px;bottom:14px;z-index:999;background:#0b3d2e;color:#fff;padding:8px 14px;border-radius:999px;font-weight:700;font-size:14px;box-shadow:0 6px 18px #0008}
+.savebadge.s-saving{background:#5a4a1d}.savebadge.s-error{background:var(--red);border-radius:14px}.savebadge button{margin-left:8px;background:#fff;color:var(--red);padding:3px 10px;border-radius:999px}

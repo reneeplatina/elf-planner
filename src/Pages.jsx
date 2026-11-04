@@ -3,6 +3,7 @@ import { Link, useParams, useNavigate } from 'react-router-dom'
 import { T, useM, Del, shrink } from './Manage'
 import { Calendar, titleFor, uid, money } from './App'
 import Planner from './Planner'
+import { IdeaTabs } from './Sheets'
 import { aiOn, aiTitle, aiSupplies } from './ai'
 const B = import.meta.env.BASE_URL
 
@@ -47,7 +48,7 @@ export function Ideas({ ideas, days }) {
   const list = ideas.filter(x => (st === 'All' || x.status === st) && (x.title + ' ' + x.description).toLowerCase().includes(q.toLowerCase()))
     .sort((a, b) => (+a.date || 99) - (+b.date || 99))
   const t = shopTotals(ideas, days)
-  return <section><h1 className="title"><T k="ideas.title" d="Ideas" /></h1>
+  return <section><h1 className="title"><T k="ideas.title" d="Ideas" /></h1><IdeaTabs />
     <div className="card filters"><input value={q} onChange={e => setQ(e.target.value)} placeholder="Search ideas" />
       <div className="chips">{['Approved', 'Maybe', 'Rejected', 'All'].map(s => <button key={s} className={'chip ' + (st === s ? 'on' : '')} onClick={() => setSt(s)}>{s} {s !== 'All' && <small>{ideas.filter(x => x.status === s).length}</small>}</button>)}</div>
       {edit && <NewIdea nav={nav} />}</div>
